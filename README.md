@@ -1,4 +1,4 @@
-# Python Migration: GMM Clustering with Incomplete Data
+# Python GMM Clustering with Incomplete Data
 
 This is a **from-scratch Python implementation** of the paper:
 
@@ -32,46 +32,33 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run synthetic demo:
-
-```bash
-python run.py --mode synthetic --clusters 3 --missing-ratio 0.3 --max-iter 150 --seed 7
-```
-
-Run on your CSV data (optional label column for metrics):
-
-```bash
-python run.py --mode csv --csv-path /path/to/data.csv --label-col target --clusters 4 --save-completed completed.csv
-```
-
-Run visual demo (Iris-style Kaggle schema, auto-generate plots):
+#### 1. Run visual demo (Iris-style Kaggle schema, auto-generate plots):
 
 ```bash
 python run_demo_visual.py --mode kaggle_iris --clusters 3 --missing-ratio 0.25 --save-generated-csv --write-template
 ```
 
-Run visual demo with your CSV:
+![alt text](image-1.png)
+
+- Run visual demo with your CSV:
 
 ```bash
 python run_demo_visual.py --mode csv --csv-path /path/to/data.csv --label-col label --clusters 4 --output-dir demo_outputs
 ```
 
-Run benchmark across missing ratios (Iris-style Kaggle schema):
+### 2. Run benchmark across missing ratios (Iris-style Kaggle schema):
 
 ```bash
 python benchmark_missing_ratio.py --mode kaggle_iris --clusters 3 --ratios 0.1,0.2,0.3,0.4,0.5,0.6,0.7 --runs-per-ratio 10 --save-plot --output-dir benchmark_outputs
 ```
 
+![alt text](image.png)
+
+
 Run benchmark with your CSV:
 
 ```bash
 python benchmark_missing_ratio.py --mode csv --csv-path /path/to/data.csv --label-col label --clusters 4 --ratios 0.1,0.3,0.5 --runs-per-ratio 5 --save-plot
-```
-
-Run smoke test:
-
-```bash
-python -m unittest tests/test_smoke.py
 ```
 
 ## Notes
