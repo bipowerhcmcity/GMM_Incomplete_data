@@ -21,6 +21,7 @@ Only `numpy`, `pandas`, and Python standard library are used.
 - `run_demo.py` — runnable CLI demo
 - `run_demo_visual.py` — demo with visualizations (missing map, convergence curve, 2D projection)
 - `benchmark_missing_ratio.py` — benchmark over multiple missing ratios (paper-style)
+- `webapp_demo.py` — Streamlit web app (upload CSV, run model, PCA plot, download results)
 - `tests/test_smoke.py` — smoke test
 - `data/template_input.csv` — CSV template for your input data format
 
@@ -37,6 +38,18 @@ pip install -r requirements.txt
 ```bash
 python run_demo_visual.py --mode kaggle_iris --clusters 3 --missing-ratio 0.25 --save-generated-csv --write-template
 ```
+
+#### 1b. Run web app demo (upload CSV + PCA visualize + download results):
+
+```bash
+streamlit run webapp_demo.py
+```
+
+Trong web app:
+- Upload `.csv` (feature numeric, có thể có `NaN`).
+- Chọn optional label column để tính ACC/NMI/Purity/F1.
+- Bấm **Run GMM** để huấn luyện và visualize PCA phân lớp.
+- Download file kết quả gồm **data đã chèn thiếu** + cột **`predicted_label`**.
 
 ![alt text](image-1.png)
 
