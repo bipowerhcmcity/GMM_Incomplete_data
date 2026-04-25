@@ -33,7 +33,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Benchmark IncompleteGMM across multiple missing-data ratios."
     )
-    parser.add_argument("--mode", choices=["synthetic", "kaggle_iris", "csv"], default="kaggle_iris")
+    parser.add_argument("--mode",choices=["synthetic", 'seeds',"kaggle_iris", "wine", "csv"], default="kaggle_iris")
     parser.add_argument("--csv-path", type=str, default="")
     parser.add_argument("--label-col", type=str, default="")
     parser.add_argument("--clusters", type=int, default=3)
@@ -101,6 +101,23 @@ def load_complete_data(args: argparse.Namespace) -> tuple[np.ndarray, np.ndarray
         x = df[FEATURE_COLUMNS_IRIS].to_numpy(dtype=float)
         y = to_numeric_labels(df["label"].to_numpy())
         return x, y, "kaggle_iris_like"
+
+    elif args.mode == "wine":
+        # from sklearn.datasets import load_wine
+        
+        data = load_wine()
+        x = data.data
+        y = data.target
+        
+        return x, y, "wine"
+
+    elif args.mode == "seeds":
+        import pandas as pd
+        url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00236/seeds_dataset.txt"
+        df = pd.read_csv(url, sep='\t+', header=None, engine='python')
+        x = df.iloc[:, :7].to_numpy(dtype=float)
+        y = df.iloc[:, 7].to_numpy().astype(int) - 1
+        return x, y, "seeds"
 
     if not args.csv_path:
         raise ValueError("--csv-path is required when mode=csv")
@@ -259,9 +276,9 @@ def main() -> None:
     raw_df = pd.DataFrame(rows).sort_values(["missing_ratio", "run"]).reset_index(drop=True)
     summary_df = summarize_results(raw_df)
 
-    raw_path = output_dir / "benchmark_raw.csv"
-    summary_path = output_dir / "benchmark_summary.csv"
-    config_path = output_dir / "benchmark_config.json"
+    raw_path = output_dir / "gmm_benchmark_raw.csv"
+    summary_path = output_dir / "gmm_benchmark_summary.csv"
+    config_path = output_dir / "gmm_benchmark_config.json"
 
     raw_df.to_csv(raw_path, index=False)
     summary_df.to_csv(summary_path, index=False)
@@ -289,7 +306,7 @@ def main() -> None:
 
     if args.save_plot:
         has_labels = y_true is not None
-        plot_path = output_dir / "benchmark_plot.png"
+        plot_path = output_dir / "gmm_benchmark_plot.png"
         plot_benchmark(summary_df, plot_path, has_labels=has_labels)
         print(f"Saved plot: {plot_path}")
 
